@@ -8,7 +8,7 @@ public class Problem2 {
 	
 	public static double f(double x)
 	{
-		return Math.tan(x) - x + 1; 
+		return Math.tan(2 * x) - x + 1; 
 	}
 	
 	public static double daoHam(double x)
