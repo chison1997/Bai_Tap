@@ -6,44 +6,32 @@ public class Problem7 {
 
 	public static void main(String[] args) {
 		Scanner input = new Scanner(System.in);
-		String s = input.nextLine();
-		boolean flag = false;
-		int countWord = 0;
-		int count[] = new int[26];
-		for(int i = 0; i <s.length(); i++)
+		int n;
+		System.out.print("So luong phan tu cua mang: "); n = input.nextInt();
+		
+		int A[] = new int[n];
+		int temp;
+		
+		for(int i = 0; i < n; i++)
 		{
-			if (Character.isLetter(s.charAt(i)) == true)
-			{
-				if(flag == false)
-				{
-					countWord ++;
-					flag = true;
-				}
-				
-				count[Character.toLowerCase(s.charAt(i)) - 'a'] ++;
-	
-			}
-			else if (Character.isLetter(s.charAt(i)) == false)
-			{
-				flag = false;
-			}
+			A[i] = input.nextInt();
 		}
 		
-		if (countWord == 0)
+		
+		for(int i = 0; i < n; i++)
+			for(int j = n - 1 ; j > i; j--)
+				if (A[j] > A[j-1])
+				{
+					temp = A[j];
+					A[j] = A[j-1];
+					A[j-1] = temp;
+					
+				}
+		System.out.println("OK");
+		System.out.print("Day sau khi sap xep: ");
+		for(int i = 0; i < n; i++)
 		{
-			System.out.println("Khong co tu nao trong xau");
+			System.out.print(A[i] + " ");
 		}
-		else
-		{
-			System.out.printf("Co %d tu trong xau\n", countWord);
-			
-			for(int i = 0; i < 26; i++)
-			{
-				if (count[i] != 0)
-					System.out.printf("%c: %d\n", 'A' + i, count[i]);
-			}
-		}
-
-	}
-
+	}	
 }
