@@ -21,6 +21,8 @@ public class SubjectManagement {
 	
 	public static void append()
 	{
+		System.out.println();
+		
 		String name, id;
 		int quota;
 		System.out.print("Subject name: "); name = input.nextLine();
@@ -34,11 +36,14 @@ public class SubjectManagement {
 		
 		s[num] = new Subject(id, name, quota, 0);
 		num ++;
+		System.out.println("Successfully");
 		
 	}
 	
 	public static void update()
 	{
+		System.out.println();
+		
 		if (num == 0)
 		{
 			System.out.println("There isn't any subject");
@@ -68,10 +73,14 @@ public class SubjectManagement {
 		System.out.print("New quota: "); s[index].setQuota(input.nextInt());
 		
 		System.out.print("New current enrolment : "); s[index].setCurrentEnrolment(input.nextInt());
+		
+		System.out.println("Successfully");
 	}
 	
 	public static void display()
 	{
+		System.out.println();
+		
 		String id;
 		int index;
 		
@@ -88,69 +97,120 @@ public class SubjectManagement {
 		}
 	}
 	
-	public static void menu()
+	public static void enrol()
 	{
-		Scanner pressKey = new Scanner(System.in);
+		System.out.println();
 		
-		System.out.println("Press Enter to continue...");
-		try
+		String id;
+		int index;
+		
+		System.out.print("Subject id: "); id = input.nextLine();
+		index = find(id);
+		
+		if (index == -1)
 		{
-			System.in.read();
+			System.out.println("Subject not found");
 		}
-		catch (IOException e)
+		else
 		{
-			e.printStackTrace();
+			if (s[index].getCurrentEnrolment() < s[index].getQuota())
+			{
+				s[index].setCurrentEnrolment(s[index].getQuota());
+				System.out.println("Successfully");
+			}
+			else
+			{
+				System.out.println("Can't enrol student");
+			}
+			
 		}
-		pressKey.nextLine();
 	}
+	
+	public static void unenrol()
+	{
+		System.out.println();
+		
+		String id;
+		int index;
+		
+		System.out.print("Subject id: "); id = input.nextLine();
+		index = find(id);
+		
+		if (index == -1)
+		{
+			System.out.println("Subject not found");
+		}
+		else
+		{
+			if (s[index].getCurrentEnrolment() > 0)
+			{
+				s[index].setCurrentEnrolment(s[index].getQuota() - 1);
+				System.out.println("Successfully");
+			}
+			else
+			{
+				System.out.println("Can't un-enrol student");
+			}
+			
+		}
+	}
+	
 	
 	
 	public static void main(String[] args) {
 		char choice;
 		
-		
-		System.out.println("Subject Management System");
-		System.out.println("---------------------------------");
-		System.out.println("1. Append new subject");
-		System.out.println("2. Update subject");
-		System.out.println("3. Display the information of subject");
-		System.out.println("4. Enrol new student");
-		System.out.println("5. Unenrol student");
-		System.out.print("Your choice (1-5, other to quit): "); choice = input.nextLine().charAt(0);
-		
-		switch(choice)
-		{
-		case '1':
-			System.out.println("1");
-			append();
-			menu();
-			break;
+		do {
+			System.out.println("Subject Management System");
+			System.out.println("---------------------------------");
+			System.out.println("1. Append new subject");
+			System.out.println("2. Update subject");
+			System.out.println("3. Display the information of subject");
+			System.out.println("4. Enrol new student");
+			System.out.println("5. Unenrol student");
+			System.out.print("Your choice (1-5, other to quit): "); choice = input.nextLine().charAt(0);
 			
-		case '2':
-			System.out.println("2");
-			update();
-			menu();
-			break;
-			
-		case '3':
-			System.out.println("3");
-			display();
-			menu();
-			break;
-			
-		case '4':
-			System.out.println("4");
-			break;
-			
-		case '5':
-			System.out.println("5");
-			break;
-		default:
-			System.out.println("Default");
-			
+			switch(choice)
+			{
+			case '1':
+				System.out.println();
+				append();
+				break;
 				
-		}
-
+			case '2':
+				update();
+				break;
+				
+			case '3':
+				display();
+				break;
+				
+			case '4':
+				enrol();
+				break;
+				
+			case '5':
+				unenrol();
+				break;
+			default:
+				System.exit(0);
+				
+					
+			}
+			
+			System.out.println("\nPress Enter to continue...");
+	//		try
+	//		{
+	//			System.in.read();
+	//		}
+	//		catch (IOException e)
+	//		{
+	//			e.printStackTrace();
+	//		}
+			input.nextLine();
+		
+			System.out.println("\n---------------------------------\n");
+		}while(true);
 	}
 
 }
