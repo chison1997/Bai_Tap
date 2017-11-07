@@ -2,15 +2,15 @@
 public class Subject {
 	private String maMonHoc;
 	private String tenMonHoc;
-	private float heSoQuaTrinh;
-	private float heSoCuoiKy;
+	private int heSoQuaTrinh;
+	private int heSoCuoiKy;
 	
-	public Subject(String maMonHoc, String tenMonHoc, float heSoQuaTrinh)
+	public Subject(String maMonHoc, String tenMonHoc, int heSoQuaTrinh)
 	{
 		this.maMonHoc = maMonHoc;
 		this.tenMonHoc = tenMonHoc;
 		this.heSoQuaTrinh = heSoQuaTrinh;
-		this.heSoCuoiKy = 1 - heSoQuaTrinh;
+		this.heSoCuoiKy = 100 - heSoQuaTrinh;
 	}
 
 	public Subject() {
@@ -32,19 +32,19 @@ public class Subject {
 		this.tenMonHoc = tenMonHoc;
 	}
 
-	public float getHeSoQuaTrinh() {
+	public int getHeSoQuaTrinh() {
 		return heSoQuaTrinh;
 	}
 
-	public void setHeSoQuaTrinh(float heSoQuaTrinh) {
+	public void setHeSoQuaTrinh(int heSoQuaTrinh) {
 		this.heSoQuaTrinh = heSoQuaTrinh;
 	}
 
-	public float getHeSoCuoiKy() {
+	public int getHeSoCuoiKy() {
 		return heSoCuoiKy;
 	}
 
-	public void setHeSoCuoiKy(float heSoCuoiKy) {
+	public void setHeSoCuoiKy(int heSoCuoiKy) {
 		this.heSoCuoiKy = heSoCuoiKy;
 	}
 	

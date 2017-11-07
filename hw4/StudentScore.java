@@ -1,3 +1,4 @@
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class StudentScore {
@@ -6,6 +7,17 @@ public class StudentScore {
 	private String MSSV;
 	private float diemQuaTrinh;
 	private float diemCuoiKy;
+	
+	public StudentScore()
+	{
+		Scanner input = new Scanner(System.in);
+		System.out.print("Ho ten dem: "); hoTenDem = input.nextLine();
+		System.out.print("Ten: "); ten = input.nextLine();
+		System.out.print("MSSV: "); MSSV = input.nextLine();
+		System.out.print("Diem qua trinh: "); diemQuaTrinh = input.nextFloat();
+		System.out.print("Diem cuoi ky: "); diemCuoiKy = input.nextFloat();
+		
+	}
 	
 	public StudentScore(String hoTenDem, String ten, String MSSV, float diemQuaTrinh, float diemCuoiKy)
 	{
@@ -65,9 +77,9 @@ public class StudentScore {
 	
 	
 	
-	public char getMark(float heSo)
+	public char getMark(int heSo)
 	{
-		float diem = diemQuaTrinh * heSo + diemCuoiKy * (1 - heSo);
+		float diem = diemQuaTrinh * heSo / 100 + diemCuoiKy * (100 - heSo) / 100;
 		if (diem >= 8.5)
 			return 'A';
 		else if (diem >= 7)
@@ -80,12 +92,15 @@ public class StudentScore {
 			return 'F';
 	}
 
-	public String getMarkLine(float heSo)
+	public String getMarkLine(int heSo)
 	{
-		return "S|" + MSSV + "|" + "|" + ten + "| " + diemQuaTrinh + " | " + diemCuoiKy + " | " + getMark(heSo) + " |";
+		return "S|" + MSSV + "|" + hoTenDem+ "|" + ten + "| " + diemQuaTrinh + " | " + diemCuoiKy + " | " + getMark(heSo) + " |";
 	}
 
-	
+	public String toString()
+	{
+		return  "MSSV: " + MSSV + ", Ho va ten: " + hoTenDem + " " + ten + "Diem qua trinh: " + diemQuaTrinh + ", Diem qua trinh: " + diemCuoiKy;
+	}
 	
 
 }
