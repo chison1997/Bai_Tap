@@ -14,6 +14,7 @@ public class ScoreBoard {
 	String maHocKy;
 	int soLuongSV;
 	
+	
 	public ScoreBoard(Path path) throws IOException
 	{
 		if (Files.notExists(path))
@@ -26,41 +27,77 @@ public class ScoreBoard {
 			String line = buf.readLine();
 			StringTokenizer s = new StringTokenizer(line, "|");
 
-			monHoc = new Subject();
+			monHoc = new Subject(null, null, 0);
+			
 			
 			s.nextToken();
-			monHoc.setMaMonHoc(s.nextToken());
-			
+			monHoc.setMaMonHoc(s.nextToken()); 
+		
 			line = buf.readLine();
+			s = new StringTokenizer(line, "|");
 			s.nextToken();
-			monHoc.setTenMonHoc(s.nextToken());
+			monHoc.setTenMonHoc(s.nextToken()); 
 			
+	
 			line = buf.readLine();
+			s = new StringTokenizer(line, "|");
 			s.nextToken();
 			monHoc.setHeSoQuaTrinh(Integer.parseInt(s.nextToken()));
 			
-			monHoc.setHeSoCuoiKy(Integer.parseInt(s.nextToken()));
+			monHoc.setHeSoCuoiKy(Integer.parseInt(s.nextToken())); 
 			
 			line = buf.readLine();
+			s = new StringTokenizer(line, "|");
 			s.nextToken();
-			maHocKy = s.nextToken();
+			maHocKy = s.nextToken(); 
 			
 			line = buf.readLine();
+			s = new StringTokenizer(line, "|");
 			s.nextToken();
 			soLuongSV = Integer.parseInt(s.nextToken());
 			
-			while (true)
+			sinhVien = new ArrayList<StudentScore>(soLuongSV);
+
+			
+			while ((line = buf.readLine()) != null)
 			{
-				line = buf.readLine();
-				if (line == null)
+				if (line.charAt(0) != 'S')
+				{
+					System.out.println("Break");
 					break;
+				}
+				
 				StudentScore SV = new StudentScore(line);
 				sinhVien.add(SV);
 			}
 		}	
 	}
 	
-
+	public ScoreBoard()
+	{
+		System.out.println("Score Board");
+		Scanner input = new Scanner(System.in);
+		monHoc = new Subject();
+		System.out.print("Ma hoc ky: "); this.maHocKy = input.nextLine();
+		System.out.print("So Luong SV: "); this.soLuongSV = input.nextInt();
+		sinhVien = new ArrayList<StudentScore>();
+		System.out.println("Nhap thong tin cac SV: ");
+		for(int i = 1; i <= soLuongSV; i++)
+		{
+			System.out.println("Sinh vien thu " + i + ": ");
+			StudentScore ss = new StudentScore();
+			sinhVien.add(ss);
+		}
+		
+		try {
+			if (Files.notExists(Paths.get(monHoc.getMaMonHoc() + "_" + maHocKy + ".txt")))
+				Files.createFile(Paths.get(monHoc.getMaMonHoc() + "_" + maHocKy + ".txt"));
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	public Subject getMonHoc() {
 		return monHoc;
@@ -92,6 +129,23 @@ public ArrayList<StudentScore> getSinhVien() {
 	}
 
 
+	public StudentScore find(String mssv)
+	{
+		for(StudentScore ss: sinhVien)
+		{
+			if (ss.getMSSV().equals(mssv))
+			{
+				return ss;
+			}
+		}
+		return null;
+	}
+	public void addScore()
+	{
+		StudentScore sv = new StudentScore();
+		sinhVien.add(sv);
+		soLuongSV ++;
+	}
 	public void editScore(String MSSV)
 	{
 		boolean flag = false;
@@ -134,8 +188,7 @@ public ArrayList<StudentScore> getSinhVien() {
 			
 			if (choose.charAt(0) == 'Y')
 			{
-				StudentScore sv = new StudentScore();
-				sinhVien.add(sv);
+				addScore();
 			}
 		}
 	}
@@ -148,15 +201,65 @@ public ArrayList<StudentScore> getSinhVien() {
 			if (MSSV.equals(sv.getMSSV()))
 			{
 				sinhVien.remove(sv);
+				soLuongSV--;
 				return true;
 			}
 		}
 		return false;
 	}
 	
+	public void display()
+	{
+		for(StudentScore ss: sinhVien)
+		{
+			System.out.printf("%s  %s %-10s %.1f  %.1f  %c\n", ss.getMSSV(), ss.getHoTenDem(), ss.getTen(), ss.getDiemQuaTrinh(), ss.getDiemCuoiKy(), ss.getMark(monHoc.getHeSoQuaTrinh()));
+		}
+	}
+	
+	
+	public void displayReport()
+	{
+		float highestMark = 0, lowestMark = 10, average = 0;
+		int count[] = new int[6];
+		float mark;
+		StudentScore highestMarkStudent = null, lowestMarkStudent = null;
+		
+		for(StudentScore sv: sinhVien)
+		{
+			mark = (sv.getDiemQuaTrinh() * monHoc.getHeSoQuaTrinh() + sv.getDiemCuoiKy() * monHoc.getHeSoCuoiKy()) / 100;
+			average += mark;
+			if (mark >= highestMark)
+			{
+				highestMark = mark;
+				highestMarkStudent = sv;
+			}
+			if (mark <= lowestMark)
+			{
+				lowestMark = mark;
+				lowestMarkStudent = sv;
+			}
+			
+			count[sv.getMark(monHoc.getHeSoQuaTrinh()) - 'A'] ++;
+		}
+		
+		average /= sinhVien.size();
+		System.out.println("The student with the highes mark is: " + highestMarkStudent.getHoTenDem() + " " + highestMarkStudent.getTen());
+		System.out.println("The student with the lowest mark is: " + lowestMarkStudent.getHoTenDem() + "  " + lowestMarkStudent.getTen());
+		System.out.println("The average mark is: " + average);
+		System.out.println("A histogram of the subject " + monHoc.getMaMonHoc() + " is: ");
+		
+		for(char c = 'A'; c <= 'F'; c++)
+		{
+			System.out.print(c + ": ");
+			for(int i = 0; i < count[c - 'A']; i++)
+				System.out.print("*");
+			System.out.println();
+		}
+	}
+	
 	public void update()
 	{
-		String path = (monHoc.getMaMonHoc() + monHoc.getMaMonHoc() + ".txt");
+		String path = (monHoc.getMaMonHoc() + "_" + maHocKy + ".txt");
 		
 		try {
 			FileWriter wr = new FileWriter(path);
@@ -165,11 +268,11 @@ public ArrayList<StudentScore> getSinhVien() {
 			wr.write("Subject|" + monHoc.getTenMonHoc() + "\n");
 			wr.write("F|" + monHoc.getHeSoQuaTrinh() + "|" + monHoc.getHeSoCuoiKy() + "\n");
 			wr.write("Semester|" + monHoc.getTenMonHoc() + "\n");
-			wr.write("StudentCount|" + soLuongSV);
+			wr.write("StudentCount|" + soLuongSV + "\n");
 			
 			for(StudentScore sv : sinhVien)
 			{
-				wr.write(sv.getMarkLine(monHoc.getHeSoQuaTrinh()));
+				wr.write(sv.getMarkLine(monHoc.getHeSoQuaTrinh()) + "\n");
 			}
 			
 			wr.close();
@@ -195,36 +298,35 @@ public ArrayList<StudentScore> getSinhVien() {
 		}
 		
 		try {
-			FileWriter wr = new FileWriter(path);
+			
 			
 			float highestMark = 0, lowestMark = 10, average = 0;
-			int count[] = new int[5];
+			int count[] = new int[6];
 			float mark;
-			String highestMarkStudent = new String(), lowestMarkStudent = new String();
+			StudentScore highestMarkStudent = null, lowestMarkStudent = null;
 			for(StudentScore sv: sinhVien)
 			{
 				mark = (sv.getDiemQuaTrinh() * monHoc.getHeSoQuaTrinh() + sv.getDiemCuoiKy() * monHoc.getHeSoCuoiKy()) / 100;
 				average += mark;
-				if (mark > highestMark)
+				if (mark >= highestMark)
 				{
 					highestMark = mark;
-					highestMarkStudent = sv.getHoTenDem() + " " + sv.getTen();
+					highestMarkStudent = sv;
 				}
-				else if (mark < lowestMark)
+				if (mark <= lowestMark)
 				{
 					lowestMark = mark;
-					lowestMarkStudent = sv.getHoTenDem() + " " + sv.getTen();
+					lowestMarkStudent = sv;
 				}
 				
 				count[sv.getMark(monHoc.getHeSoQuaTrinh()) - 'A'] ++;
 			}
+				
+			average /= soLuongSV;
 			
-			highestMarkStudent.toUpperCase();
-			lowestMarkStudent.toLowerCase();
-			average /= sinhVien.size();
-			
-			wr.write("The student with the highes mark is: " + highestMarkStudent + "\n");
-			wr.write("The student with the lowest mark is: " + lowestMarkStudent + "\n");
+			FileWriter wr = new FileWriter(path);
+			wr.write("The student with the highes mark is: " + highestMarkStudent.getHoTenDem() + " " + highestMarkStudent.getTen()  + "\n");
+			wr.write("The student with the lowest mark is: " + lowestMarkStudent.getHoTenDem() + " " + lowestMarkStudent.getTen() + "\n");
 			wr.write("The average mark is: " + average + "\n\n");
 			wr.write("A histogram of the subject " + monHoc.getMaMonHoc() + " is: \n");
 			
@@ -236,8 +338,8 @@ public ArrayList<StudentScore> getSinhVien() {
 				wr.write("\n");
 			}
 			
+			wr.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}

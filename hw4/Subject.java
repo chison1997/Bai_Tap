@@ -1,9 +1,11 @@
+import java.util.Scanner;
 
 public class Subject {
 	private String maMonHoc;
 	private String tenMonHoc;
 	private int heSoQuaTrinh;
 	private int heSoCuoiKy;
+	
 	
 	public Subject(String maMonHoc, String tenMonHoc, int heSoQuaTrinh)
 	{
@@ -14,6 +16,11 @@ public class Subject {
 	}
 
 	public Subject() {
+		Scanner input = new Scanner(System.in);
+		System.out.print("Ma mon hoc: "); this.maMonHoc = input.nextLine();
+		System.out.print("Ten mon hoc: "); this.tenMonHoc = input.nextLine();
+		System.out.print("He so qua trinh: "); this.heSoQuaTrinh = input.nextInt();
+		this.heSoCuoiKy = 100 - this.heSoQuaTrinh;
 	}
 
 	public String getMaMonHoc() {

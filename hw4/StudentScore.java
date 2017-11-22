@@ -31,17 +31,19 @@ public class StudentScore {
 	public StudentScore(String line) {
 		StringTokenizer s = new StringTokenizer(line, "|");
 		
+		String temp;
 		s.nextToken();
-		
 		MSSV = s.nextToken();
-		
 		hoTenDem = s.nextToken();
-		
 		ten = s.nextToken();
+	
+		temp = s.nextToken();
+		diemQuaTrinh = Float.parseFloat(temp);
 		
-		diemQuaTrinh = Float.parseFloat(s.nextToken());
 		
-		diemCuoiKy = Float.parseFloat(s.nextToken());
+		temp = s.nextToken();
+		diemCuoiKy = Float.parseFloat(temp);
+		
 	}
 
 	public String getHoTenDem() {
@@ -99,7 +101,7 @@ public class StudentScore {
 
 	public String toString()
 	{
-		return  "MSSV: " + MSSV + ", Ho va ten: " + hoTenDem + " " + ten + "Diem qua trinh: " + diemQuaTrinh + ", Diem qua trinh: " + diemCuoiKy;
+		return  "MSSV: " + MSSV + ", Ho va ten: " + hoTenDem + " " + ten + ", Diem qua trinh: " + diemQuaTrinh + ", Diem qua trinh: " + diemCuoiKy;
 	}
 	
 
